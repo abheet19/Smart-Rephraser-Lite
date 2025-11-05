@@ -1,3 +1,5 @@
+import { debounce, fakeAIRephrase } from "./utils.js";
+
 const input = document.getElementById("inputText");
 const output = document.getElementById("outputBox");
 const rephraseBtn = document.getElementById("rephraseBtn");
@@ -28,4 +30,17 @@ input.addEventListener(
     output.textContent = fakeAIRephrase(input.value);
   }, 600)
 );
+const themeBtn = document.createElement("button");
+themeBtn.textContent = "🌓 Toggle Theme";
+document.querySelector("header").appendChild(themeBtn);
+
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("light");
+  const theme = document.body.classList.contains("light") ? "light" : "dark";
+  localStorage.setItem("theme", theme);
+});
+
+// Load saved theme
+if (localStorage.getItem("theme") === "light")
+  document.body.classList.add("light");
 
