@@ -1,55 +1,62 @@
-const CACHE_NAME = "sr-lite-cache-v3";
-const STATIC_ASSETS = [
+// sw.js  —  basic "network-first with offline fallback"
+
+const CACHE_NAME = "sr-lite-cache-v5";
+const ASSETS = [
   "./",
   "./index.html",
   "./styles/main.css",
   "./scripts/app.js",
-  "./scripts/utils.js"
+  "./scripts/utils.js",
 ];
 
-self.addEventListener("install", event => {
+// ----- INSTALL -----
+self.addEventListener("install", (evt) => {
   console.log("SW: installing…");
-  event.waitUntil(
+  evt.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => console.log("SW: assets cached"))
-      .catch(err => console.error("SW: cache addAll failed →", err))
+      .then((cache) => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)))
+// ----- ACTIVATE -----
+self.addEventListener("activate", (evt) => {
+  console.log("SW: activating…");
+  evt.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
     ).then(() => self.clients.claim())
   );
 });
 
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
+// ----- FETCH -----
+self.addEventListener("fetch", (evt) => {
+  if (evt.request.method !== "GET") return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) {
-        console.log("SW: serving from cache →", event.request.url);
-        return cached;
-      }
+  const req = evt.request;
 
-      return fetch(event.request)
-        .then(netRes => {
-          return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, netRes.clone());
-            console.log("SW: cached new →", event.request.url);
-            return netRes;
-          });
-        })
-        .catch(async () => {
-          // Handle offline navigation (app shell)
-          if (event.request.mode === "navigate") {
-            console.log("SW: offline fallback → index.html");
-            return await caches.match("./index.html");
-          }
-        });
-    })
+  evt.respondWith(
+    fetch(req)
+      .then((netRes) => {
+        if (!netRes || netRes.status !== 200 || netRes.type === "opaque") {
+          return netRes;
+        }
+
+        //  Skip requests from extensions or devtools
+        const url = new URL(req.url);
+        if (url.protocol === "chrome-extension:" || url.protocol === "devtools:") {
+          return netRes;
+        }
+
+        const resClone = netRes.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+
+        return netRes;
+      })
+      .catch(async () => {
+        const cached = await caches.match(req);
+        if (cached) return cached;
+        if (req.mode === "navigate") return caches.match("./index.html");
+      })
   );
 });
