@@ -19,6 +19,7 @@
       <div class="actions">
         <button id="rephraseBtn">Rephrase</button>
         <button id="clearBtn">Clear</button>
+        <button id="resetCacheBtn">Reset Cache</button>
       </div>
     </section>
 
@@ -29,5 +30,12 @@
   </main>
   <script type ="module" src="./scripts/utils.js"></script>
   <script type = "module" src="./scripts/app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js")
+        .then(()=>console.log("SW registered"))
+        .catch(err=>console.error("SW registration failed", err));
+    }
+  </script>
 </body>
 </html>

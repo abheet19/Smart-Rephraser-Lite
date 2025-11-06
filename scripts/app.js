@@ -1,33 +1,39 @@
 import { debounce, fakeAIRephrase } from "./utils.js";
+import { cachedRephrase, clearCache } from "./cacheService.js";
+import { measureAsync } from "./profiler.js";
 
 const input = document.getElementById("inputText");
 const output = document.getElementById("outputBox");
-const rephraseBtn = document.getElementById("rephraseBtn");
-const clearBtn = document.getElementById("clearBtn");
+const buttons = document.querySelector(".actions");
 
-async function rephraseHandler() {
+async function handleRephrase() {
   const text = input.value.trim();
   if (!text) {
     output.textContent = "⚠️ Please enter some text.";
     return;
   }
   output.textContent = "Thinking...";
-  await sleep(1000);  // simulate latency
-  const newText = fakeAIRephrase(text);
-  output.textContent = newText;
+  const { duration, result } = await measureAsync(() => cachedRephrase(text));
+  console.log(`Rephrased in ${duration.toFixed(2)}ms`);
+
+  output.textContent = result;
 }
 
-rephraseBtn.addEventListener("click", rephraseHandler);
-clearBtn.addEventListener("click", () => {
-  input.value = "";
-  output.textContent = "";
+
+buttons.addEventListener("click", e => {
+  if (e.target.id === "rephraseBtn") handleRephrase();
+  if (e.target.id === "clearBtn") { input.value = ""; output.textContent = ""; }
+  if (e.target.id === "resetCacheBtn") clearCache();
 });
 
 // Live preview (debounced)
 input.addEventListener(
   "input",
-  debounce(() => {
-    output.textContent = fakeAIRephrase(input.value);
+  debounce(async () => {
+    const text = input.value.trim();
+    if (!text) return (output.textContent = "");
+    const { result } = await measureAsync(() => cachedRephrase(text));
+    output.textContent = result;
   }, 600)
 );
 const themeBtn = document.createElement("button");
