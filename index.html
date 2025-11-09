@@ -1,41 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Rephraser Lite v0.1</title>
-  <link rel="stylesheet" href="./styles/main.css" />
-</head>
-<body>
-  <main class="app-container">
-    <header>
-      <img src="./assets/logo.svg" alt="logo" class="logo" />
-      <h1>Smart Rephraser Lite</h1>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Rephraser Lite v0.4 (React)</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <div id="root"></div>
 
-    <section class="editor">
-      <label for="inputText">Enter text to rephrase:</label>
-      <textarea id="inputText" placeholder="Type something…"></textarea>
-      <div class="actions">
-        <button id="rephraseBtn">Rephrase</button>
-        <button id="clearBtn">Clear</button>
-        <button id="resetCacheBtn">Reset Cache</button>
-      </div>
-    </section>
+    <!-- React entry -->
+    <script type="module" src="/src/main.jsx"></script>
 
-    <section class="result">
-      <h2>Result</h2>
-      <div id="outputBox" class="output"></div>
-    </section>
-  </main>
-  <script type ="module" src="./scripts/utils.js"></script>
-  <script type = "module" src="./scripts/app.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./sw.js")
-        .then(()=>console.log("SW registered"))
-        .catch(err=>console.error("SW registration failed", err));
-    }
-  </script>
-</body>
+    <!-- Service Worker -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then(() => console.log("Service Worker registered"))
+          .catch(err => console.error("SW registration failed", err));
+      }
+    </script>
+  </body>
 </html>
