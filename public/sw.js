@@ -8,6 +8,8 @@ const ASSETS = [
   "./scripts/app.js",
   "./scripts/utils.js",
 ];
+// Ignore WebSocket + HMR traffic (dev only)
+const IGNORE_LIST = ["@vite", "hot-update", "sockjs-node", "hmr", "vite-dev"];
 
 // ----- INSTALL -----
 self.addEventListener("install", (evt) => {
@@ -32,7 +34,13 @@ self.addEventListener("activate", (evt) => {
 self.addEventListener("fetch", event => {
   const { request } = event;
   const url = new URL(request.url);
-
+  // 🔒 Skip WebSocket and HMR traffic so Vite's dev server stays alive
+  if (
+    url.protocol.startsWith("ws") ||
+    IGNORE_LIST.some((term) => url.href.includes(term))
+  ) {
+    return;
+  }
   // Example: API calls to /api/rephrase -> network first then cache
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(
