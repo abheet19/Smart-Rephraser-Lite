@@ -11,17 +11,16 @@ const ASSETS = [
 
 // ----- INSTALL -----
 self.addEventListener("install", (evt) => {
-  console.log("SW: installing…");
+  console.log("SW v5: installing…");
   evt.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
-      .then(() => self.skipWaiting())
   );
 });
 
 // ----- ACTIVATE -----
 self.addEventListener("activate", (evt) => {
-  console.log("SW: activating…");
+  console.log("SW v5: activating…");
   evt.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
@@ -30,33 +29,33 @@ self.addEventListener("activate", (evt) => {
 });
 
 // ----- FETCH -----
-self.addEventListener("fetch", (evt) => {
-  if (evt.request.method !== "GET") return;
+self.addEventListener("fetch", event => {
+  const { request } = event;
+  const url = new URL(request.url);
 
-  const req = evt.request;
+  // Example: API calls to /api/rephrase -> network first then cache
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // optionally clone & cache
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
-  evt.respondWith(
-    fetch(req)
-      .then((netRes) => {
-        if (!netRes || netRes.status !== 200 || netRes.type === "opaque") {
-          return netRes;
-        }
+  // For other GET requests, serve cache first
+  if (request.method === "GET") {
+    event.respondWith(
+      caches.match(request).then(cached => cached || fetch(request))
+    );
+  }
+});
 
-        //  Skip requests from extensions or devtools
-        const url = new URL(req.url);
-        if (url.protocol === "chrome-extension:" || url.protocol === "devtools:") {
-          return netRes;
-        }
-
-        const resClone = netRes.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-
-        return netRes;
-      })
-      .catch(async () => {
-        const cached = await caches.match(req);
-        if (cached) return cached;
-        if (req.mode === "navigate") return caches.match("./index.html");
-      })
-  );
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
