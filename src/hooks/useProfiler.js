@@ -11,8 +11,6 @@ export function useProfiler(tag = "profiler") {
     const result = await asyncFn();
     const end = performance.now();
     const duration = end - start;
-    // Log a structured message (could be sent to telemetry later)
-    console.log(`[${tag}] duration: ${duration.toFixed(2)}ms`);
     return { duration, result };
   }
 

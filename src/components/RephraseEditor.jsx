@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { sendEvent, safeHash } from "../utils/telemetry";
 import { useCache } from "../context/CacheContext";
 import { useProfiler } from "../hooks/useProfiler";
 
@@ -11,10 +12,14 @@ export default function RephraseEditor() {
     if (!text.trim()) return;
     // measureAsync wraps the rephrase call
     const { duration, result } = await measureAsync(() => rephrase(text.trim()));
-    // rephrase returns { fromCache, result }
-    console.log(`Rephrased in ${duration.toFixed(2)}ms`, result);
-    // For this component we can set a global result via cache or emit upward via context/useState elsewhere.
-    // We'll just log and let Result component read the cache
+
+    const inputHash = text ? safeHash(text.trim()) : "empty";
+    // Send to telemetry 
+    sendEvent("rephrase_click", {
+      fromCache: result.fromCache || false,
+      latency: duration.toFixed(2),
+      inputHash,
+    });
   };
 
   return (
@@ -27,7 +32,14 @@ export default function RephraseEditor() {
       <div className="actions">
         <button onClick={handleRephraseClick}>Rephrase</button>
         <button onClick={() => { setText(""); }}>Clear</button>
-        <button onClick={clear}>Reset Cache</button>
+        <button
+          onClick={() => {
+            setText("");       // clear input field
+            clear();           // clear global cache and result
+          }}
+        >
+          Reset Cache
+        </button>
       </div>
     </div>
   );

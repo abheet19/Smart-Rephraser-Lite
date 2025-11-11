@@ -24,6 +24,7 @@ export function CacheProvider({ children }) {
   const clear = () => {
     setStore({})
     setLastInput("")
+    localStorage.removeItem("sr-lite-cache-v5"); // optional, for persistence
 };
 
   // high-level rephrase: check cache, else compute & set
