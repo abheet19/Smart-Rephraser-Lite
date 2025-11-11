@@ -8,7 +8,19 @@
     "test:e2e": "playwright test tests",
     "start": "lite-server",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write ."
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.{css,html,json,md}": [
+      "prettier --write"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -22,6 +34,8 @@
     "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "lite-server": "^2.6.1",
     "prettier": "^3.6.2",
     "vite": "^7.1.12",
