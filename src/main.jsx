@@ -3,6 +3,11 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import ErrorBoundary from "./components/ErrorBoundary";
+
+window.addEventListener("unhandledrejection", (ev) => {
+  sendEvent("unhandledrejection", { reason: String(ev.reason) }, { sampleRate: 1.0 });
+});
 
 // Register service worker and update flow
 if ("serviceWorker" in navigator) {
@@ -42,9 +47,11 @@ if ("serviceWorker" in navigator) {
 }
 
 createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
-    <App />
-  // </React.StrictMode>
+  <React.StrictMode>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </React.StrictMode>
 );
 
 // Utility for toast (simple)

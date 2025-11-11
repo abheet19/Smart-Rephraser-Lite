@@ -18,5 +18,8 @@ export default defineConfig({
     headers: {
       "Cache-Control": "public, max-age=31536000, immutable"
     }
-  }
+  },
+  test: {
+    exclude: ["tests/**", "node_modules/**"], // 👈 ignore E2E tests
+  },
 });

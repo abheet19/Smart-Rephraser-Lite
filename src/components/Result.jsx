@@ -19,7 +19,7 @@ export default function Result() {
         const hasValidInput = lastInput && lastInput.trim().length > 0;
 
         async function loadResult() {
-            const { result, duration } = await measureAsync(async () => {
+            const { duration } = await measureAsync(async () => {
                 if (!lastInput) {
                     setResult("");
                     return;

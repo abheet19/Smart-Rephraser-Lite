@@ -4,10 +4,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test tests",
     "start": "lite-server",
-    "build":"vite build",
-    "preview":"vite preview"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +16,16 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "lite-server": "^2.6.1",
     "prettier": "^3.6.2",
-    "vite": "^7.1.12"
+    "vite": "^7.1.12",
+    "vitest": "^4.0.8"
   },
   "dependencies": {
     "react": "^19.2.0",
