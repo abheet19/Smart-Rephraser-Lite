@@ -11,10 +11,12 @@ export default function RephraseEditor() {
   const handleRephraseClick = async () => {
     if (!text.trim()) return;
     // measureAsync wraps the rephrase call
-    const { duration, result } = await measureAsync(() => rephrase(text.trim()));
+    const { duration, result } = await measureAsync(() =>
+      rephrase(text.trim()),
+    );
 
     const inputHash = text ? safeHash(text.trim()) : "empty";
-    // Send to telemetry 
+    // Send to telemetry
     sendEvent("rephrase_click", {
       fromCache: result.fromCache || false,
       latency: duration.toFixed(2),
@@ -26,16 +28,22 @@ export default function RephraseEditor() {
     <div className="editor">
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         placeholder="Type something to rephrase..."
       />
       <div className="actions">
         <button onClick={handleRephraseClick}>Rephrase</button>
-        <button onClick={() => { setText(""); }}>Clear</button>
         <button
           onClick={() => {
-            setText("");       // clear input field
-            clear();           // clear global cache and result
+            setText("");
+          }}
+        >
+          Clear
+        </button>
+        <button
+          onClick={() => {
+            setText(""); // clear input field
+            clear(); // clear global cache and result
           }}
         >
           Reset Cache

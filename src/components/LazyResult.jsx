@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useCache } from "../context/CacheContext";
-import { sendEvent } from "../utils/telemetry";
 import { useProfiler } from "../hooks/useProfiler";
+import { sendEvent } from "../utils/telemetry";
 
 export default function LazyResult() {
   const { store, lastInput } = useCache();
-  const { measureAsync } = useProfiler("lazy-result");
-  const [tokens, setTokens] = useState([]);
+  const { measureAsync } = useProfiler("lazy_result");
 
+  const tokens = useMemo(() => {
+    if (!lastInput || !store[lastInput]) return [];
+    return store[lastInput].split(" ");
+  }, [store, lastInput]);
+
+  // ⚡ Telemetry separate (no re-render side effects inside useMemo)
   useEffect(() => {
-    if (!lastInput || !store[lastInput]) {
-      setTokens([]);
-      return;
-    }
-    const hasValidInput = lastInput && lastInput.trim().length > 0;
-    //  Measure and compute in one step
+    if (!lastInput || !store[lastInput]) return;
     measureAsync(async () => {
-      const text = store[lastInput];
-      const words = text.split(" ");
-      const renderedTokens = words.map((t, i) => (
-        <span key={i} className="token">{t}</span>
-      ));
-      setTokens(renderedTokens);
-      return words.length; // for telemetry info
-
-    }).then(({ duration, result: wordCount }) => {
       sendEvent("lazy_result_render", {
-        hasInput: hasValidInput,
-        tokenCount: wordCount,
-        latency: duration.toFixed(2),
+        hasInput: true,
+        tokenCount: tokens.length,
       });
     });
-  }, [store, lastInput]);
+  }, [measureAsync, store, lastInput, tokens.length]);
 
   return (
     <div className="lazy-result">
       <h3>Rich Visualization</h3>
       <div className="tokens">
-        {tokens.length ? tokens : <em>No text to visualize.</em>}
+        {tokens.length ? (
+          tokens.map((t, i) => (
+            <span key={i} className="token">
+              {t}
+            </span>
+          ))
+        ) : (
+          <em>No text to visualize.</em>
+        )}
       </div>
     </div>
   );

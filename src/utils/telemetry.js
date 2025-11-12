@@ -18,7 +18,7 @@ export function sendEvent(name, payload = {}, opts = {}) {
     ts: new Date().toISOString(),
     name,
     env: ENV,
-    ...payload
+    ...payload,
   };
 
   if (ENV === "development") {
@@ -35,7 +35,7 @@ export function sendEvent(name, payload = {}, opts = {}) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(event),
-  }).catch(err => {
+  }).catch((err) => {
     // swallow network errors: don't break the app
     console.warn("Telemetry error", err);
   });

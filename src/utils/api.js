@@ -1,14 +1,19 @@
 // src/utils/api.js
 
 // Simulate server latency
-export const sleep = (ms = 800) => new Promise(r => setTimeout(r, ms));
+export const sleep = (ms = 800) => new Promise((r) => setTimeout(r, ms));
 
 // Fake AI transformation (same logic as before)
 export function fakeAIRephrase(text) {
-  const synonyms = { quick: "speedy", happy: "joyful", fast: "rapid", smart: "intelligent" };
+  const synonyms = {
+    quick: "speedy",
+    happy: "joyful",
+    fast: "rapid",
+    smart: "intelligent",
+  };
   return text
     .split(" ")
-    .map(w => synonyms[w.toLowerCase()] || w)
+    .map((w) => synonyms[w.toLowerCase()] || w)
     .reverse()
     .join(" ");
 }
@@ -20,7 +25,7 @@ export function loadCache() {
   try {
     return JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
   } catch (e) {
-    return {};
+    return e;
   }
 }
 export function saveCache(cache) {
@@ -30,6 +35,6 @@ export function saveCache(cache) {
 // High-level API: rephrase with simulated latency
 export async function rephraseWithCompute(text) {
   // NOTE: This simulates server computation and is where a backend call would happen.
-  await sleep(800);                // simulate network + compute
-  return fakeAIRephrase(text);     // return computed result
+  await sleep(800); // simulate network + compute
+  return fakeAIRephrase(text); // return computed result
 }

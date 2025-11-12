@@ -1,55 +1,66 @@
-import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { loadCache, saveCache, rephraseWithCompute } from "../utils/api";
+// src/context/CacheContext.jsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
+import { fakeAIRephrase } from "../utils/api";
 
-// Create context
 const CacheContext = createContext(null);
 
-// Provider component
 export function CacheProvider({ children }) {
-  // store is a JS object mapping inputText -> result
-  const [store, setStore] = useState(() => loadCache());
-  const [lastInput,setLastInput]=useState("")
-  // Persist to localStorage whenever store changes
-  useEffect(() => {
-    saveCache(store);
-  }, [store]);
+  const [store, setStore] = useState(() => {
+    const saved = localStorage.getItem("rephrase-cache");
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [lastInput, setLastInput] = useState("");
 
-  // get cached value (sync)
-  const get = text => store[text];
+  // ✅ 1️⃣ Stable functions with useCallback
+  const get = useCallback((key) => store[key], [store]);
 
-  // set cached value (sync)
-  const set = (text, result) => setStore(prev => ({ ...prev, [text]: result }));
+  const set = useCallback((key, value) => {
+    setStore((prev) => {
+      const updated = { ...prev, [key]: value };
+      localStorage.setItem("rephrase-cache", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
-  // clear cache
-  const clear = () => {
-    setStore({})
-    setLastInput("")
-    localStorage.removeItem("sr-lite-cache-v5"); // optional, for persistence
-};
+  const clear = useCallback(() => {
+    localStorage.removeItem("rephrase-cache");
+    setStore({});
+    setLastInput("");
+  }, []);
 
-  // high-level rephrase: check cache, else compute & set
-  const rephrase = async text => {
-    if (!text) return "";
-    setLastInput(text)
-    if (store[text]) {
-      // Cache hit
-      return { fromCache: true, result: store[text] };
-    }
-    // Cache miss: compute (calls simulated backend)
-    const computed = await rephraseWithCompute(text);
-    set(text, computed);
-    return { fromCache: false, result: computed };
-  };
+  const rephrase = useCallback(
+    async (text) => {
+      if (store[text]) {
+        console.log("Cache hit for:", text);
+        return { fromCache: true, result: store[text] };
+      }
+      const result = fakeAIRephrase(text);
+      set(text, result);
+      setLastInput(text);
+      return { fromCache: false, result };
+    },
+    [store, set],
+  );
 
-  // memoize context value to avoid unnecessary rerenders
-  const value = useMemo(() => ({ store,lastInput,get, set, clear, rephrase }), [store]);
+  // ✅ 2️⃣ Stable context value
+  const value = useMemo(
+    () => ({ store, lastInput, get, set, clear, rephrase }),
+    [store, lastInput, get, set, clear, rephrase],
+  );
 
-  return <CacheContext.Provider value={value}>{children}</CacheContext.Provider>;
+  return (
+    <CacheContext.Provider value={value}>{children}</CacheContext.Provider>
+  );
 }
 
-// Hook for consuming cache easily
-export const useCache = () => {
+export function useCache() {
   const ctx = useContext(CacheContext);
   if (!ctx) throw new Error("useCache must be used within CacheProvider");
   return ctx;
-};
+}

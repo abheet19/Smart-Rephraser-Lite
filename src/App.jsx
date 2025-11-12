@@ -14,8 +14,9 @@ export default function App() {
         {/* Result reacts automatically via context (no props needed) */}
         <Result />
         {/* Suspense shows fallback until LazyResult bundle loads */}
-        <Suspense fallback={<div className="suspense-fallback">Loading results...</div>}>
-
+        <Suspense
+          fallback={<div className="suspense-fallback">Loading results...</div>}
+        >
           {/* Optional fancy visualization, also reactive via cache */}
           <LazyResult />
         </Suspense>

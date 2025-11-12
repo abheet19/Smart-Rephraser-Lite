@@ -7,4 +7,4 @@ describe("fakeAIRephrase", () => {
     const out = fakeAIRephrase(input);
     expect(out).toBe("joyful speedy");
   });
-})
+});

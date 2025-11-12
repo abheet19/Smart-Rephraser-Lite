@@ -4,9 +4,13 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import ErrorBoundary from "./components/ErrorBoundary";
-
+import { sendEvent } from "./utils/telemetry";
 window.addEventListener("unhandledrejection", (ev) => {
-  sendEvent("unhandledrejection", { reason: String(ev.reason) }, { sampleRate: 1.0 });
+  sendEvent(
+    "unhandledrejection",
+    { reason: String(ev.reason) },
+    { sampleRate: 1.0 },
+  );
 });
 
 // Register service worker and update flow
@@ -14,7 +18,7 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/sw.js")
-      .then(registration => {
+      .then((registration) => {
         console.log("Service Worker registered:", registration);
 
         registration.onupdatefound = () => {
@@ -37,7 +41,7 @@ if ("serviceWorker" in navigator) {
           };
         };
       })
-      .catch(err => console.error("SW registration failed:", err));
+      .catch((err) => console.error("SW registration failed:", err));
   });
 
   // Listen for controlling service worker changes
@@ -51,13 +55,14 @@ createRoot(document.getElementById("root")).render(
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // Utility for toast (simple)
 function showUpdateToast(onRefresh) {
   const toast = document.createElement("div");
-  toast.style = "position:fixed;bottom:16px;right:16px;padding:12px;background:#323232;color:#fff;border-radius:4px;cursor:pointer;z-index:1000";
+  toast.style =
+    "position:fixed;bottom:16px;right:16px;padding:12px;background:#323232;color:#fff;border-radius:4px;cursor:pointer;z-index:1000";
   toast.textContent = "New version available. Click to update.";
   toast.onclick = onRefresh;
   document.body.appendChild(toast);
