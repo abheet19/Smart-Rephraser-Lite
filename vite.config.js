@@ -1,25 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: "dist",
-    chunkSizeWarningLimit: 500,
     rollupOptions: {
+      input: {
+        popup: path.resolve(__dirname, "src/extension-entry/popup-react-entry.jsx"),
+      },
       output: {
-        entryFileNames: "assets/[name].[hash].js",
-        chunkFileNames: "assets/[name].[hash].js",
-        assetFileNames: "assets/[name].[hash].[ext]",
+        dir: "extension",
+        entryFileNames: "popup.js",    // <-- output popup.js HERE
+        assetFileNames: "assets/[name].[ext]",
       },
     },
-  },
-  server: {
-    headers: {
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
-  },
-  test: {
-    exclude: ["tests/**", "node_modules/**"], // 👈 ignore E2E tests
+    emptyOutDir: false,  // don't delete extension folder
   },
 });

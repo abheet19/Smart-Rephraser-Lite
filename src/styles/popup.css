@@ -1,0 +1,102 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Popup container */
+body {
+  width: 330px; /* Standard extension popup width */
+  min-height: 420px;
+  background-color: #ffffff;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: #333;
+  padding: 12px;
+  overflow-x: hidden;
+}
+
+/* Root React container */
+#root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Header */
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+/* Textarea input */
+textarea {
+  width: 100%;
+  height: 120px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d0d7de;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.25);
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #4a90e2;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #3d7dcc;
+}
+
+/* Output box */
+.output-container {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  min-height: 60px;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+/* Small status text or error */
+.status-text {
+  font-size: 13px;
+  margin-top: -4px;
+  color: #555;
+}
+
+/* Scrollbar for long text */
+textarea::-webkit-scrollbar,
+.output-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-thumb,
+.output-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}

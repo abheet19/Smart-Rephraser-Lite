@@ -11,14 +11,14 @@ export default function RephraseEditor() {
   const handleRephraseClick = async () => {
     if (!text.trim()) return;
     // measureAsync wraps the rephrase call
-    const { duration, result } = await measureAsync(() =>
+    const { duration, result: resp } = await measureAsync(() =>
       rephrase(text.trim()),
     );
 
     const inputHash = text ? safeHash(text.trim()) : "empty";
     // Send to telemetry
     sendEvent("rephrase_click", {
-      fromCache: result.fromCache || false,
+      fromCache: resp.fromCache || false,
       latency: duration.toFixed(2),
       inputHash,
     });

@@ -20,7 +20,11 @@ export function sendEvent(name, payload = {}, opts = {}) {
     env: ENV,
     ...payload,
   };
-
+  // Disable telemetry for Chrome extension (popup env)
+  if (chrome?.runtime?.id) {
+    console.log(`[telemetry disabled in extension]`, event);
+    return Promise.resolve();
+  }
   if (ENV === "development") {
     console.log(`[${name}]`, event);
     return Promise.resolve();

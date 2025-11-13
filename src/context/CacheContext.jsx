@@ -5,31 +5,62 @@ import React, {
   useState,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
 import { fakeAIRephrase } from "../utils/api";
+
+async function loadChromeCache() {
+  return new Promise((resolve) => {
+    // Web mode → fallback to localStorage
+    if (!chrome?.storage?.local) {
+      const saved = localStorage.getItem("rephrase-cache");
+      resolve(saved ? JSON.parse(saved) : {});
+      return;
+    }
+
+    // Extension mode → use chrome.storage.local
+    chrome.storage.local.get(["rephrase-cache"], (data) => {
+      resolve(data["rephrase-cache"] || {});
+    });
+  });
+}
+
+async function saveChromeCache(store) {
+  if (chrome?.storage?.local) {
+    chrome.storage.local.set({ "rephrase-cache": store });
+  } else {
+    localStorage.setItem("rephrase-cache", JSON.stringify(store));
+  }
+}
 
 const CacheContext = createContext(null);
 
 export function CacheProvider({ children }) {
-  const [store, setStore] = useState(() => {
-    const saved = localStorage.getItem("rephrase-cache");
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [store, setStore] = useState({});
   const [lastInput, setLastInput] = useState("");
 
-  // ✅ 1️⃣ Stable functions with useCallback
+  // -----------------------------------------------
+  // 3. Load cache async on mount (supports extension)
+  // -----------------------------------------------
+  useEffect(() => {
+    loadChromeCache().then((data) => {
+      setStore(data);
+    });
+  }, []);
+
+  // Stable functions
   const get = useCallback((key) => store[key], [store]);
 
   const set = useCallback((key, value) => {
     setStore((prev) => {
       const updated = { ...prev, [key]: value };
-      localStorage.setItem("rephrase-cache", JSON.stringify(updated));
+      saveChromeCache(updated);
       return updated;
     });
   }, []);
 
   const clear = useCallback(() => {
-    localStorage.removeItem("rephrase-cache");
+    saveChromeCache({});
     setStore({});
     setLastInput("");
   }, []);
@@ -37,18 +68,18 @@ export function CacheProvider({ children }) {
   const rephrase = useCallback(
     async (text) => {
       if (store[text]) {
-        console.log("Cache hit for:", text);
         return { fromCache: true, result: store[text] };
       }
+
       const result = fakeAIRephrase(text);
       set(text, result);
       setLastInput(text);
+
       return { fromCache: false, result };
     },
     [store, set],
   );
 
-  // ✅ 2️⃣ Stable context value
   const value = useMemo(
     () => ({ store, lastInput, get, set, clear, rephrase }),
     [store, lastInput, get, set, clear, rephrase],
