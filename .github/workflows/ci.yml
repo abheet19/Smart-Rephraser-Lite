@@ -51,6 +51,11 @@ jobs:
       - run: npm ci
       - name: Build Project
         run: npm run build
+
+      - name: Remove NTFS Zone.Identifier files
+        run: |
+          find dist -type f -name "*:*" -exec rm -f {} \;
+          
       - uses: actions/upload-artifact@v4
         with:
           name: dist
