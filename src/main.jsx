@@ -11,6 +11,7 @@ window.addEventListener("unhandledrejection", (ev) => {
   sendEvent("unhandledrejection", { reason: String(ev.reason) });
 });
 // Register service worker and update flow
+console.log("is Extensions ?", isExtension);
 if (!isExtension && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker

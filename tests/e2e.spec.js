@@ -2,7 +2,7 @@
 const { test, expect } = require("@playwright/test");
 
 test("rephrase flow works (cache miss -> hit)", async ({ page }) => {
-  await page.goto("http://localhost:5173");
+  await page.goto("http://127.0.0.1:4173");;
   await page.fill("textarea", "quick fox");
   await page.click("text=Rephrase");
   // Wait for output to update

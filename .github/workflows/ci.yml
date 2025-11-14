@@ -55,7 +55,7 @@ jobs:
       - name: Remove NTFS Zone.Identifier files
         run: |
           find dist -type f -name "*:*" -exec rm -f {} \;
-          
+
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -78,11 +78,11 @@ jobs:
 
       #  Start local server (Vite preview)
       - name: Start Vite preview server
-        run: npm run preview &
+        run: nohup npm run preview > preview.log 2>&1 &
       
       #  Wait until it's ready
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:4173
+        run: npx wait-on http://127.0.0.1:4173
 
       #  Run Playwright tests (will connect to localhost:4173)
       - name: Run Playwright Tests

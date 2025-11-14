@@ -8,7 +8,7 @@
     "test:e2e": "playwright test tests",
     "start": "lite-server",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --host 0.0.0.0",
     "prepare": "husky",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
     "format": "prettier --write .",
