@@ -76,9 +76,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      #  Start local server (Vite preview)
-      - name: Start Vite preview server
-        run: nohup npm run preview > preview.log 2>&1 &
+      # Serve the built dist folder (NOT Vite preview)
+      - name: Serve Production Build
+        run: npx serve -s dist -l 4173 > server.log 2>&1 &
       
       #  Wait until it's ready
       - name: Wait for server to be ready
