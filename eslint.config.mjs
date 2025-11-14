@@ -7,13 +7,15 @@ import { defineConfig } from "eslint/config";
 export default defineConfig([
   {
     files: ["**/*.{js,jsx,mjs,cjs}"],
-    ignores: ["dist/**", "node_modules/**", "tests/e2e.spec.js"],
+    ignores: ["dist/**", "node_modules/**", "tests/e2e.spec.js", "extension/popup.js",
+      "extension/sw.js", "extension/background.js","*.min.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
         ...globals.browser,
         ...globals.node,
+        chrome: "readonly"
       },
       parserOptions: {
         ecmaFeatures: {

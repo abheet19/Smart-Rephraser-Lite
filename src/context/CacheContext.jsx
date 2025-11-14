@@ -67,17 +67,25 @@ export function CacheProvider({ children }) {
 
   const rephrase = useCallback(
     async (text) => {
-      if (store[text]) {
-        return { fromCache: true, result: store[text] };
+      const current = store[text];
+
+      if (current) {
+        return { fromCache: true, result: current };
       }
 
       const result = fakeAIRephrase(text);
-      set(text, result);
+
+      setStore((prev) => {
+        const updated = { ...prev, [text]: result };
+        saveChromeCache(updated);
+        return updated;
+      });
+
       setLastInput(text);
 
       return { fromCache: false, result };
     },
-    [store, set],
+    [store], // depends only on store
   );
 
   const value = useMemo(
