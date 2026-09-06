@@ -1,40 +1,19 @@
 // src/utils/api.js
+//
+// The app's only "API" -- there is no backend and no key, so rephrasing is
+// the real, synchronous, client-side pipeline in paraphrase.js. The small
+// delay below isn't simulated network latency (there's nothing to wait on);
+// it's a floor so the loading state in RephraseEditor is visible even though
+// the computation itself finishes in under a millisecond.
+import { paraphrase } from "./paraphrase";
 
-// Simulate server latency
-export const sleep = (ms = 800) => new Promise((r) => setTimeout(r, ms));
+const MIN_VISIBLE_LOADING_MS = 250;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Fake AI transformation (same logic as before)
-export function fakeAIRephrase(text) {
-  const synonyms = {
-    quick: "speedy",
-    happy: "joyful",
-    fast: "rapid",
-    smart: "intelligent",
-  };
-  return text
-    .split(" ")
-    .map((w) => synonyms[w.toLowerCase()] || w)
-    .reverse()
-    .join(" ");
-}
-
-// LocalStorage helpers
-const CACHE_KEY = "sr_rephrase_cache_v1";
-
-export function loadCache() {
-  try {
-    return JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
-  } catch (e) {
-    return e;
-  }
-}
-export function saveCache(cache) {
-  localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-}
-
-// High-level API: rephrase with simulated latency
-export async function rephraseWithCompute(text) {
-  // NOTE: This simulates server computation and is where a backend call would happen.
-  await sleep(800); // simulate network + compute
-  return fakeAIRephrase(text); // return computed result
+export async function rephrase(text) {
+  const [result] = await Promise.all([
+    Promise.resolve(paraphrase(text)),
+    sleep(MIN_VISIBLE_LOADING_MS),
+  ]);
+  return result;
 }

@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useEffect,
 } from "react";
-import { fakeAIRephrase } from "../utils/api";
+import { rephrase as computeRephrase } from "../utils/api";
 
 async function loadChromeCache() {
   return new Promise((resolve) => {
@@ -73,7 +73,7 @@ export function CacheProvider({ children }) {
         return { fromCache: true, result: current };
       }
 
-      const result = fakeAIRephrase(text);
+      const result = await computeRephrase(text);
 
       setStore((prev) => {
         const updated = { ...prev, [text]: result };

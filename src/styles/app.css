@@ -1,14 +1,18 @@
-/* Theme tokens adapted from the abheet19 shared-ui design system
-   (dark background, glass-morphism cards, cyan/blue accent gradient). */
+/* Theme tokens: dark ground + a violet/orchid accent family, distinct from
+   this project's steel-blue, copper, emerald and rose siblings. Same
+   dark-glass structure as those, in its own palette:
+     #0B0A10 ground · #B98BFF -> #7C4DFF -> #5A3FA0 accent · #ECE9F2 text
+   Space Grotesk (display) / Inter (body), matching the shared type system. */
 :root {
-  --bg: #0b0d12;
-  --bg-elevated: #11141c;
+  --bg: #0b0a10;
+  --bg-elevated: #131019;
   --glass: rgba(255, 255, 255, 0.04);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --text: #e8eaf0;
-  --text-dim: #9aa1b2;
-  --accent: #61dafb;
-  --accent-2: #3178c6;
+  --text: #ece9f2;
+  --text-dim: #a49cb8;
+  --accent: #b98bff;
+  --accent-2: #7c4dff;
+  --accent-3: #5a3fa0;
   --success: #4ade80;
   --danger: #f87171;
   --radius: 14px;
@@ -32,8 +36,8 @@ body {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(1200px 600px at 20% -10%, #16233a33, transparent),
-    radial-gradient(1000px 500px at 90% 10%, #1a2a1a22, transparent), var(--bg);
+    radial-gradient(1200px 600px at 20% -10%, #3a1f5a26, transparent),
+    radial-gradient(1000px 500px at 90% 10%, #1a1a2e22, transparent), var(--bg);
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -71,7 +75,12 @@ body {
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0 0 6px;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  background: linear-gradient(
+    135deg,
+    var(--accent-3),
+    var(--accent-2),
+    var(--accent)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -125,7 +134,15 @@ textarea::placeholder {
 
 textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.18);
+  box-shadow: 0 0 0 3px rgba(185, 139, 255, 0.18);
+}
+
+/* Live character/word counter */
+.counter {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: right;
+  font-family: var(--font-mono);
 }
 
 /* Button row */
@@ -145,26 +162,41 @@ textarea:focus {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease,
     background 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .btn:active {
   transform: translateY(0);
 }
 
-/* Primary: cyan/blue accent gradient */
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color: #061018;
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-.btn-primary:hover {
+/* Primary: violet/orchid accent gradient, with a soft glow beneath it that
+   this project's siblings (steel-blue, copper, emerald, rose) don't carry --
+   this app's one small structural signature. */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+  color: #0b0a10;
+  box-shadow: 0 6px 20px -6px rgba(124, 77, 255, 0.55);
+}
+
+.btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px -8px var(--accent-2);
+  box-shadow: 0 10px 28px -6px rgba(124, 77, 255, 0.7);
 }
 
 /* Secondary: outlined glass button */
@@ -174,24 +206,64 @@ textarea:focus {
   border: 1px solid var(--glass-border);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   border-color: var(--text-dim);
   background: rgba(255, 255, 255, 0.03);
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(:disabled) {
   border-color: var(--danger);
   color: var(--danger);
 }
 
+.btn-copy {
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* Spinner shown inside the Rephrase button while it is running */
+.spinner {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(11, 10, 16, 0.35);
+  border-top-color: #0b0a10;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Result panel */
+.result {
+  /* Accent-colored left border — this app's other structural signature,
+     distinguishing the result panel from a plain glass card. */
+  border-left: 3px solid var(--accent-2);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
 .result h2,
 .lazy-result h3 {
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 600;
-  margin: 0 0 12px;
+  margin: 0;
   color: var(--text);
+}
+
+.result-header h2 {
+  margin: 0;
 }
 
 .output {
@@ -211,6 +283,13 @@ textarea:focus {
   font-style: italic;
 }
 
+/* Copy confirmation toast */
+.toast {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--accent);
+}
+
 /* Rich visualization panel */
 .tokens {
   display: flex;
@@ -225,8 +304,8 @@ textarea:focus {
 .token {
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(97, 218, 251, 0.1);
-  border: 1px solid rgba(97, 218, 251, 0.25);
+  background: rgba(185, 139, 255, 0.1);
+  border: 1px solid rgba(185, 139, 255, 0.25);
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 12px;
