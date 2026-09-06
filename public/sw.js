@@ -1,13 +1,14 @@
 // sw.js  —  basic "network-first with offline fallback"
 
-const CACHE_NAME = "sr-lite-cache-v5";
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./styles/main.css",
-  "./scripts/app.js",
-  "./scripts/utils.js",
-];
+const CACHE_NAME = "sr-lite-cache-v6";
+// Only the two paths every build actually produces. The three that used to
+// be listed here (styles/main.css, scripts/app.js, scripts/utils.js) are
+// Day-1 vanilla-JS filenames the React migration replaced with content-hashed
+// bundles under assets/ -- none of them exist in dist. cache.addAll() is
+// all-or-nothing, so the moment one entry 404s the whole install rejects and
+// the service worker never activates; the fetch handler below still caches
+// the real hashed bundles at runtime as they're requested.
+const ASSETS = ["./", "./index.html"];
 // Ignore WebSocket + HMR traffic (dev only)
 const IGNORE_LIST = ["@vite", "hot-update", "sockjs-node", "hmr", "vite-dev"];
 

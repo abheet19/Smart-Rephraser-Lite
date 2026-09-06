@@ -1,4 +1,4 @@
-node_modules/
 .vscode/
 dist/
-test-results/
+node_modules/
+test-results/*:Zone.Identifier

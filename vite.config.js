@@ -5,6 +5,12 @@ import { resolve } from "path";
 export default defineConfig({
   plugins: [react()],
 
+  // GitHub Pages serves a project site under /<repo-name>/, not the domain
+  // root, so every asset URL Vite emits has to be prefixed with it -- without
+  // this, the deployed page requests /assets/... at the domain root, gets a
+  // 404, and renders blank.
+  base: "/Smart-Rephraser-Lite/",
+
   build: {
     outDir: "dist",
     emptyOutDir: true,

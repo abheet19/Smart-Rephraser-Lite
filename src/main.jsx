@@ -15,7 +15,12 @@ console.log("is Extensions ?", isExtension);
 if (!isExtension && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/sw.js")
+      // Root-absolute so it 404'd anywhere but a domain root: GitHub Pages
+      // serves a project site under /Smart-Rephraser-Lite/, not "/", so the
+      // registration was requesting a script one level up from where it
+      // actually lives. import.meta.env.BASE_URL is Vite's own base config,
+      // so this stays correct in dev (base "/") and every deployed target.
+      .register(`${import.meta.env.BASE_URL}sw.js`)
       .then((registration) => {
         console.log("Service Worker registered:", registration);
 
