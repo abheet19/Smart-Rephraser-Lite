@@ -1,105 +1,139 @@
-# 🧠 Smart Rephraser Lite — Learning & Build Log
+<div align="center">
 
-> A 14-day full-stack web extension learning plan inspired by QuillBot’s frontend architecture.  
-> This repo documents daily progress — code, theory, and project iterations.
+<br>
 
----
+# ✎ &nbsp;S M A R T &nbsp; R E P H R A S E R &nbsp; L I T E
 
-## 🚀 Project Overview
+### **Rephrase text without sending it anywhere.**
 
-**Smart Rephraser Lite** is a browser-based AI writing assistant prototype built step-by-step across 14 days.  
-The goal is to master the frontend ecosystem (Vanilla JS → React + TypeScript → Chrome Extensions → Node API) through hands-on, incremental development.
+A small React app that rewrites your sentences entirely in the browser —<br>
+no backend, no API key, no network call in the rephrasing path at all.
 
----
+<br>
 
-## 📅 Day 1 — Core Frontend Foundations
+[![CI](https://github.com/abheet19/Smart-Rephraser-Lite/actions/workflows/ci.yml/badge.svg)](https://github.com/abheet19/Smart-Rephraser-Lite/actions/workflows/ci.yml)
+[![Deploy](https://github.com/abheet19/Smart-Rephraser-Lite/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/abheet19/Smart-Rephraser-Lite/actions/workflows/deploy-pages.yml)
+[![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](#-tech-stack)
+[![Vite](https://img.shields.io/badge/Vite-7-B98BFF?logo=vite&logoColor=white)](#-tech-stack)
+[![License: ISC](https://img.shields.io/badge/license-ISC-8a94a6)](package.json)
 
-### 🎯 **Objective**
+<br>
 
-Establish deep fluency with HTML, CSS, and Vanilla JavaScript (DOM traversal, events, async, and prototypes).  
-Build the first working version: a standalone browser app with rephrasing logic.
+<sub>A personal project by <b><a href="https://github.com/abheet19">Abheet</a></b> — a tiny, fully client-side writing tool.</sub>
 
-### 🧠 **Concepts Covered**
+<br>
 
-- HTML5 semantics, CSS Flexbox & Grid basics
-- DOM tree, event bubbling & delegation
-- `getElementById`, `querySelector`, `closest`, and `children`
-- `addEventListener`, propagation, and dynamic element creation
-- `setTimeout`, `async/await`, and Promises
-- Debouncing input and state updates
-- Modular project structure and Git commit hygiene
+**[Try it live →](https://abheet19.github.io/Smart-Rephraser-Lite/)**
 
-### 🧩 **Implementation Summary**
-
-- Initialized project with `lite-server`
-- Created semantic UI layout (header, textarea, buttons, output section)
-- Styled responsive dark theme (`main.css`)
-- Implemented JavaScript logic:
-  ```js
-  btn.addEventListener("click", async () => {
-    const inputText = textArea.value.trim();
-    if (!inputText) return (output.textContent = "Please enter text.");
-    output.textContent = "Thinking...";
-    await new Promise((r) => setTimeout(r, 800));
-    output.textContent = fakeAIRephrase(inputText);
-  });
-  ```
-
-### 🧩 **Utils**:
-
-- debounce(fn, delay) for input control
-- fakeAIRephrase() mock AI logic
-
-Practiced DOM inspection + event bubbling in DevTools
-
-### 🧩 **Exercises**:
-
-- DOM Traversal (closest, children.length)
-
-- Event Bubbling Visualization
-
-- Async sleep function + await
-
-- Prototype chain exploration
-
-Day 2
-
-> **Modern JavaScript + Tooling Setup (Foundation for React)**
+</div>
 
 ---
 
-## 🎯 Objective
+## Why this exists
 
-Upgrade the Day 1 project to use **modern ES6+ JavaScript**, modularize the codebase, and set up **Vite** for a production-like developer workflow.  
-This day bridges the gap between Vanilla JS and React.
-
----
-
-## 🧠 Key Concepts Covered
-
-- ES Modules (`import` / `export`)
-- Arrow Functions & Lexical `this`
-- Destructuring, Spread & Rest Operators
-- Promises & Async/Await
-- Functional Patterns: `map`, `filter`, `reduce`
-- Build Tooling with **Vite** (for bundling + hot-reload)
-- Code Quality Setup with **ESLint** + **Prettier**
+Most "AI rephrasing" tools ship your text to a server before you get a word back. Smart Rephraser Lite is the
+opposite bet: a lightweight paraphraser — filler-word trimming, contraction expansion, synonym substitution, and
+clause reordering — built as a small, dependency-free pipeline that runs synchronously in the tab. No key to
+configure, no quota, no round-trip. The trade-off is honest: it won't out-write a hosted LLM, but everything it
+does output is fast, private, and yours.
 
 ---
 
-## 1️⃣ Module Setup
+## 🧭 At a glance
 
-Enable ES modules in HTML:
+| Piece                | What it does                                                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **`paraphrase.js`**  | The pipeline: trim fillers → expand/contract → substitute synonyms → fix articles → reorder clauses                       |
+| **`synonyms.js`**    | A hand-picked table of a few hundred common words, one plain-English replacement each                                     |
+| **`CacheContext`**   | Caches every rephrase by input text, backed by `chrome.storage.local` in the extension build or `localStorage` on the web |
+| **Service worker**   | Offline-first caching of the built assets, with an in-app "update available" toast                                        |
+| **Chrome extension** | The same React app, built a second time as a popup (`extension/`)                                                         |
 
-```html
-<script type="module" src="./scripts/app.js"></script>
+---
 
-## 🧱 Implementation Summary - Refactor utils.js - Refactor app.js - Install and
-Configure Vite - Update package.json - Add Linting + Formatting - Modern DOM
-Exercises # Exercise Concept 1 Dynamic creation with DocumentFragment Batch DOM
-updates efficiently 2 Destructured event objects Cleaner callbacks 3 Attribute
-binding via dataset Custom lightweight state 4 Declarative re-rendering Manual
-state-driven DOM updates 5 Batch vs single append Performance comparison 6 Event
-delegation Scalable event handling 7 Intersection Observer API Lazy loading
-fundamentals
+## 🚀 Install &amp; run
+
+```powershell
+git clone https://github.com/abheet19/Smart-Rephraser-Lite.git
+cd Smart-Rephraser-Lite
+npm install
+npm run dev
 ```
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Build for the web**
+
+```powershell
+npm run build
+npm run preview
+```
+
+Outputs to `dist/` — this is what deploys to GitHub Pages on every push to `main`.
+
+</td>
+<td width="50%" valign="top">
+
+**Test &amp; lint**
+
+```powershell
+npm run test:unit
+npm run lint
+```
+
+Unit tests cover the paraphrase pipeline directly; `npm run test:e2e` drives the built app with Playwright.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠 Tech stack
+
+![React](https://img.shields.io/badge/React-19-149ECA?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-unit_tests-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-e2e-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-flat_config-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Service Worker](https://img.shields.io/badge/Service_Worker-offline_cache-B98BFF?style=for-the-badge)
+![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-MV3-7C4DFF?style=for-the-badge&logo=googlechrome&logoColor=white)
+
+No runtime dependencies beyond React itself — the rephrasing logic is plain JavaScript, no ML runtime, no
+third-party API client.
+
+---
+
+## 🎨 Design
+
+Dark ground with a violet/orchid accent (`#0B0A10` → `#B98BFF` / `#7C4DFF` / `#5A3FA0`), glass-morphism cards,
+Space Grotesk for display type and Inter for body text — one project in a small family of side-projects that
+each get their own accent color rather than sharing one theme. The Rephrase button carries a soft violet glow
+and the result panel has an accent-colored left border; both are this app's own detail, not copied from its
+siblings.
+
+---
+
+## 📸 Screenshots
+
+<!--
+  Real screenshots still need to be captured from the running app and saved
+  under assets/ with the filenames below — none of the files exist yet.
+-->
+
+![Editor and result panel](assets/screenshot-1.png)
+![Rephrasing in progress](assets/screenshot-2.png)
+
+---
+
+<div align="center">
+
+<br>
+
+Built by **[Abheet Singh Isher](https://github.com/abheet19)**
+
+<br>
+
+</div>
