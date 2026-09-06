@@ -118,13 +118,9 @@ siblings.
 
 ## 📸 Screenshots
 
-<!--
-  Real screenshots still need to be captured from the running app and saved
-  under assets/ with the filenames below — none of the files exist yet.
--->
+Captured live from [the deployed app](https://abheet19.github.io/Smart-Rephraser-Lite/).
 
-![Editor and result panel](assets/screenshot-1.png)
-![Rephrasing in progress](assets/screenshot-2.png)
+![Smart Rephraser Lite — editor and result panel](assets/screenshots/screenshot-1.png)
 
 ---
 
