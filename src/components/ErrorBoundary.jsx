@@ -20,10 +20,17 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: 16 }}>
-          <h2>Something went wrong.</h2>
-          <p>We’ve recorded this issue. Try refreshing the page.</p>
-          <button onClick={() => window.location.reload()}>Reload</button>
+        <div className="page">
+          <div className="error-boundary glass-card">
+            <h2>Something went wrong.</h2>
+            <p>We’ve recorded this issue. Try refreshing the page.</p>
+            <button
+              className="btn btn-primary"
+              onClick={() => window.location.reload()}
+            >
+              Reload
+            </button>
+          </div>
         </div>
       );
     }

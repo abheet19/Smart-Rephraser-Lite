@@ -24,9 +24,11 @@ export default function Result() {
   }, [measureAsync, store, lastInput]);
 
   return (
-    <div className="result">
+    <div className="result glass-card">
       <h2>Result</h2>
-      <div className="output">{result || "No result yet."}</div>
+      <div className={`output${result ? "" : " output-empty"}`}>
+        {result || "No result yet."}
+      </div>
     </div>
   );
 }

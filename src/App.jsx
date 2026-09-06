@@ -8,19 +8,30 @@ const LazyResult = lazy(() => import("./components/LazyResult"));
 export default function App() {
   return (
     <CacheProvider>
-      <main className="app">
-        {/* Editor handles input + triggers cache updates */}
-        <RephraseEditor />
-        {/* Result reacts automatically via context (no props needed) */}
-        <Result />
-        {/* Suspense shows fallback until LazyResult bundle loads */}
-        <Suspense
-          fallback={<div className="suspense-fallback">Loading results...</div>}
-        >
-          {/* Optional fancy visualization, also reactive via cache */}
-          <LazyResult />
-        </Suspense>
-      </main>
+      <div className="page">
+        <main className="app">
+          <header className="app-header">
+            <h1>Smart Rephraser Lite</h1>
+            <p className="app-subtitle">
+              Client-side rephrasing, no server round-trip required.
+            </p>
+          </header>
+
+          {/* Editor handles input + triggers cache updates */}
+          <RephraseEditor />
+          {/* Result reacts automatically via context (no props needed) */}
+          <Result />
+          {/* Suspense shows fallback until LazyResult bundle loads */}
+          <Suspense
+            fallback={
+              <div className="suspense-fallback">Loading results...</div>
+            }
+          >
+            {/* Optional fancy visualization, also reactive via cache */}
+            <LazyResult />
+          </Suspense>
+        </main>
+      </div>
     </CacheProvider>
   );
 }

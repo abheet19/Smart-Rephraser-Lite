@@ -24,7 +24,7 @@ export default function LazyResult() {
   }, [measureAsync, store, lastInput, tokens.length]);
 
   return (
-    <div className="lazy-result">
+    <div className="lazy-result glass-card">
       <h3>Rich Visualization</h3>
       <div className="tokens">
         {tokens.length ? (
@@ -34,7 +34,7 @@ export default function LazyResult() {
             </span>
           ))
         ) : (
-          <em>No text to visualize.</em>
+          <em className="tokens-empty">No text to visualize.</em>
         )}
       </div>
     </div>

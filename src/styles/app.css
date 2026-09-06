@@ -1,0 +1,295 @@
+/* Theme tokens adapted from the abheet19 shared-ui design system
+   (dark background, glass-morphism cards, cyan/blue accent gradient). */
+:root {
+  --bg: #0b0d12;
+  --bg-elevated: #11141c;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text: #e8eaf0;
+  --text-dim: #9aa1b2;
+  --accent: #61dafb;
+  --accent-2: #3178c6;
+  --success: #4ade80;
+  --danger: #f87171;
+  --radius: 14px;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Page background */
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, #16233a33, transparent),
+    radial-gradient(1000px 500px at 90% 10%, #1a2a1a22, transparent), var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Page layout: centers the app instead of pinning it top-left */
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 48px 20px;
+}
+
+.app {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.app-header {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.app-header h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.app-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* Shared glass card treatment for the editor / result / viz panels */
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  padding: 20px;
+  box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.5);
+}
+
+/* Editor */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  resize: vertical;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+textarea::placeholder {
+  color: var(--text-dim);
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.18);
+}
+
+/* Button row */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1 1 auto;
+  min-width: 110px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Primary: cyan/blue accent gradient */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #061018;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px var(--accent-2);
+}
+
+/* Secondary: outlined glass button */
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Result panel */
+.result h2,
+.lazy-result h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.output {
+  padding: 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  min-height: 60px;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Rich visualization panel */
+.tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tokens-empty {
+  color: var(--text-dim);
+}
+
+.token {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(97, 218, 251, 0.1);
+  border: 1px solid rgba(97, 218, 251, 0.25);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.suspense-fallback {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* Error boundary fallback */
+.error-boundary {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error-boundary h2 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+.error-boundary p {
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* Scrollbars */
+textarea::-webkit-scrollbar,
+.output::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-thumb,
+.output::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* Mobile widths */
+@media (max-width: 480px) {
+  .page {
+    padding: 28px 14px;
+  }
+
+  .app-header h1 {
+    font-size: 22px;
+  }
+
+  .glass-card {
+    padding: 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

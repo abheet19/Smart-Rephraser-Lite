@@ -2,7 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import ErrorBoundary from "./components/ErrorBoundary";
-import "./styles/popup.css";
+import "./styles/app.css";
 import { sendEvent } from "./utils/telemetry";
 
 const isExtension = location.protocol === "chrome-extension:";

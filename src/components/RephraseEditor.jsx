@@ -25,15 +25,18 @@ export default function RephraseEditor() {
   };
 
   return (
-    <div className="editor">
+    <div className="editor glass-card">
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type something to rephrase..."
       />
       <div className="actions">
-        <button onClick={handleRephraseClick}>Rephrase</button>
+        <button className="btn btn-primary" onClick={handleRephraseClick}>
+          Rephrase
+        </button>
         <button
+          className="btn btn-secondary"
           onClick={() => {
             setText("");
           }}
@@ -41,6 +44,7 @@ export default function RephraseEditor() {
           Clear
         </button>
         <button
+          className="btn btn-secondary btn-danger"
           onClick={() => {
             setText(""); // clear input field
             clear(); // clear global cache and result
