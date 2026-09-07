@@ -19,6 +19,13 @@ no backend, no API key, no network call in the rephrasing path at all.
 
 <br>
 
+![Smart Rephraser Lite — typing a sentence, rephrasing it, and copying the result](docs/demo/hero.gif)
+
+<sub>The real app, recorded live: type a sentence, hit **Rephrase**, and the rewrite plus the token
+panel appear instantly — no server, no API key, no network call.</sub>
+
+<br>
+
 <sub>A personal project by <b><a href="https://github.com/abheet19">Abheet</a></b> — a tiny, fully client-side writing tool.</sub>
 
 <br>
@@ -121,6 +128,18 @@ siblings.
 Captured live from [the deployed app](https://abheet19.github.io/Smart-Rephraser-Lite/).
 
 ![Smart Rephraser Lite — editor and result panel](assets/screenshots/screenshot-1.png)
+
+### Regenerating the demo GIF
+
+The hero GIF at the top is a real Playwright recording of the deployed app, not a mockup. Re-record it
+whenever the UI changes:
+
+```powershell
+node tools/record-demo.mjs        # drives the app, writes PNG frames
+python tools/build-demo-gif.py    # assembles docs/demo/hero.gif (Pillow)
+```
+
+Set `DEMO_URL` to record a local build instead (`npm run build && npm run preview`).
 
 ---
 
